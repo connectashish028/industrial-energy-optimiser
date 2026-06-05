@@ -1,10 +1,9 @@
 name: Daily pipeline
 
-# Gate-closure paced, not HFT: run after the European day-ahead results settle.
-# 06:00 UTC ≈ 07:00/08:00 CET — well after the D-1 12:00 gate of the prior day.
+# Productionisation reference: score the trailing window, write next-day dispatch
+# + dashboard artifacts, log to MLflow. Manual-only in this repo — the scheduled
+# run (06:00 UTC, after the D-1 gate) needs the live market data, not bundled here.
 on:
-  schedule:
-    - cron: "0 6 * * *"
   workflow_dispatch: {}
 
 permissions:
