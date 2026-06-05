@@ -1,0 +1,51 @@
+name: Daily pipeline
+
+# Gate-closure paced, not HFT: run after the European day-ahead results settle.
+# 06:00 UTC ≈ 07:00/08:00 CET — well after the D-1 12:00 gate of the prior day.
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write          # commit refreshed dashboard artifacts
+
+concurrency:
+  group: daily-pipeline
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+
+      - name: Sync deps (locked)
+        run: uv sync --frozen
+
+      # Public APIs, no token. Tolerate a flaky source; the pipeline still scores
+      # on whatever data is present.
+      - name: Refresh data
+        continue-on-error: true
+        run: uv run python -m bessopt.data.refresh
+
+      - name: Run daily pipeline (score + next-day dispatch + MLflow)
+        run: uv run python -m bessopt.pipeline --window-days 60
+
+      - name: Commit refreshed dashboard artifacts
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add outputs/          # .gitignore keeps this to the dashboard artifacts
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "chore: daily pipeline refresh [skip ci]"
+            git push
+          fi

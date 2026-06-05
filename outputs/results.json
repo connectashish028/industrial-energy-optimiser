@@ -1,0 +1,37 @@
+{
+  "run_time_utc": "2026-06-04T09:00:00+00:00",
+  "data_last_ts": "2026-06-04T12:15:00+00:00",
+  "data_lag_hours": 10.5,
+  "model_version": "xgboost_price_v1",
+  "window": {
+    "start": "2026-05-26",
+    "end": "2026-06-03",
+    "days": 8
+  },
+  "assets": {
+    "asset_1h": {
+      "vcr": 0.8469438539281992,
+      "kendall_tau": 0.7866096184610408,
+      "mae": 21.08349374251613,
+      "eur_per_mw_yr_oracle": 71926.05845934982,
+      "eur_per_mw_yr_forecast": 60917.333149426675,
+      "n_days": 9
+    },
+    "asset_2h": {
+      "vcr": 0.9098721270431789,
+      "kendall_tau": 0.7866096184610408,
+      "mae": 21.08349374251613,
+      "eur_per_mw_yr_oracle": 126789.2300028102,
+      "eur_per_mw_yr_forecast": 115361.98638882376,
+      "n_days": 9
+    }
+  },
+  "next_day": {
+    "date": "2026-06-04",
+    "asset": "asset_2h",
+    "expected_arbitrage_eur": 1343.845390155793,
+    "n_charge_slots": 13,
+    "n_discharge_slots": 12,
+    "cycles": 1.4080547850204337
+  }
+}

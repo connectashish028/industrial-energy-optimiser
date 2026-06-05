@@ -1,0 +1,34 @@
+name: Tests
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch: {}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+
+      - name: Sync deps (locked)
+        run: uv sync --frozen
+
+      - name: Lint
+        run: uv run ruff check src tests scripts
+
+      # Build a short recent window so the data-dependent tests run too (the
+      # bundled parquet is gitignored). Core LP/CVaR/PICASSO tests need no data.
+      - name: Build a small dataset
+        continue-on-error: true
+        run: uv run python -m bessopt.data.refresh --rebuild --start 2025-10-01
+
+      - name: Tests
+        run: uv run pytest -q
