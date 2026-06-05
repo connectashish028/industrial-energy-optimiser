@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.env
+
+# Node / React demo
+node_modules/
+*.tsbuildinfo
+
+# Data artifacts (large; rebuild via `python -m bessopt.data.refresh`)
+data/*.parquet
+data/*.parquet.tmp
+!data/.gitkeep
+
+# Outputs — track only the dashboard artifacts the daily cron commits; ignore scratch.
+outputs/*
+!outputs/results.json
+!outputs/headline_vcr.png
+!outputs/value_stack_by_market.png
+!outputs/cvar_frontier.png
+!outputs/next_day_dispatch_2h.png
+mlruns/
+mlartifacts/
+mlflow.db
+.ipynb_checkpoints/
+
+# Tooling
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/

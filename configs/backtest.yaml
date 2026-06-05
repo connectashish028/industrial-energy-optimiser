@@ -1,0 +1,16 @@
+# Backtest / replay / MPC configuration.
+
+# Default evaluation window (post 15-min MTU break — single regime).
+test_start: "2025-10-01"
+test_end:   "2026-03-31"
+
+annualise_days: 365        # €/MW/year = total_revenue / n_days * annualise_days / power_mw
+
+replay:
+  carry_soc: true          # maintain SoC across delivery days (production-realistic)
+  carry_degradation: false # Phase 6 hook
+  use_band: false          # false: P50 both sides; true: P10-charge / P90-discharge heuristic
+
+mpc:
+  horizon_h: 36            # optimise next N hours at each decision point (24-72)
+  step_h: 24               # execute this many hours before re-solving (24 = daily; <24 = intraday)

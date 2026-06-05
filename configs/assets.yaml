@@ -1,0 +1,22 @@
+# Battery asset specifications.
+# The ONLY difference between the 1h and 2h asset is energy_mwh — duration =
+# energy_mwh / power_mw. Running the same optimiser at 10 and 20 MWh is the
+# cleanest way to surface the duration economics the project is about.
+
+asset_1h:
+  power_mw: 10.0
+  energy_mwh: 10.0          # 1-hour duration
+  eta_rt: 0.90             # round-trip efficiency (LFP); split eta_c = eta_d = sqrt(eta_rt)
+  soc_min_frac: 0.10
+  soc_max_frac: 0.90
+  deg_cost_eur_per_mwh: 0.0   # Phase 6 hook (linear throughput cost, 2-4 for LFP)
+  cycle_cap_per_day: null     # Phase 6 hook (e.g. 2.0 to cap ~730 cycles/yr)
+
+asset_2h:
+  power_mw: 10.0
+  energy_mwh: 20.0          # 2-hour duration
+  eta_rt: 0.90
+  soc_min_frac: 0.10
+  soc_max_frac: 0.90
+  deg_cost_eur_per_mwh: 0.0
+  cycle_cap_per_day: null

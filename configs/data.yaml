@@ -1,0 +1,15 @@
+# Data layer configuration.
+
+parquet_path: data/de_lu_15min.parquet
+price_col: price__germany_luxembourg   # canonical DE-LU day-ahead price, EUR/MWh, 96x15-min
+zone: DE-LU
+resolution_minutes: 15
+rebuild_start: "2022-01-01"
+
+# Issue time (forecast decision point) = D-1 12:00 Europe/Berlin (EPEX gate).
+# Encoded in bessopt.data.loader.issue_time_for — do not duplicate here.
+
+# Structural break: the 15-min day-ahead MTU went live 2025-09-30. Models
+# trained across it mix two regimes — train post-break only or add a regime
+# indicator, and state which.
+mtu_15min_break: "2025-09-30"

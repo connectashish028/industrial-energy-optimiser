@@ -1,0 +1,74 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bessopt"
+version = "0.1.0"
+description = "Production-grade German BESS optimiser — SoC-aware dispatch, point-in-time backtest, value-capture loop."
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+authors = [{ name = "Ashish" }]
+license = { text = "MIT" }
+
+dependencies = [
+  # --- numerics / data ---
+  "numpy>=1.26,<2.0",
+  "pandas>=2.2,<2.3",
+  "pyarrow>=15.0",
+  "scipy>=1.11",          # kendalltau, stats
+  "xarray>=2024.0",       # linopy backing
+  "pyyaml>=6.0",          # configs
+  # --- optimiser (the heart) ---
+  "linopy>=0.3",          # LP/MILP modelling layer
+  "highspy>=1.7",         # HiGHS solver (free, <1s for this problem)
+  # --- forecasting (vendored XGBoost quantile price model) ---
+  "xgboost>=2.0",
+  "scikit-learn>=1.4,<1.6",
+  "holidays>=0.50",
+  # --- data ingestion ---
+  "requests>=2.32",
+  "python-dateutil>=2.9",
+  "pytz>=2024.1",
+  "entsoe-py>=0.6",       # optional parallel source (token-gated, lazy-imported)
+  "python-dotenv>=1.0",
+  # --- reporting / serving / ops ---
+  "plotly>=5.22",
+  "matplotlib>=3.8",
+  "streamlit>=1.36",
+  "fastapi>=0.111",
+  "uvicorn>=0.30",
+  "mlflow>=2.14",         # experiment tracking + model registry
+  "tqdm>=4.66",
+  "joblib>=1.4",
+]
+
+[dependency-groups]
+dev = [
+  "pytest>=8.2",
+  "pytest-cov>=5.0",
+  "ruff>=0.5",
+  "pre-commit>=3.7",
+  "ipykernel>=6.29",
+  "jupyterlab>=4.2",
+]
+
+[tool.uv]
+# uv is the dependency manager. `uv sync` creates .venv, installs runtime +
+# the dev group, builds bessopt editable, and writes uv.lock (committed).
+package = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
