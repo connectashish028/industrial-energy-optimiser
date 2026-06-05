@@ -24,11 +24,8 @@ jobs:
       - name: Lint
         run: uv run ruff check src tests scripts
 
-      # Build a short recent window so the data-dependent tests run too (the
-      # bundled parquet is gitignored). Core LP/CVaR/PICASSO tests need no data.
-      - name: Build a small dataset
-        continue-on-error: true
-        run: uv run python -m bessopt.data.refresh --rebuild --start 2025-10-01
-
+      # The market parquet is gitignored, so data-dependent tests skip here by
+      # design (they run locally with the bundled data). CI validates the
+      # deterministic core — LP dispatch, CVaR, PICASSO buffer, metrics.
       - name: Tests
         run: uv run pytest -q
